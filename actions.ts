@@ -23,7 +23,7 @@ export async function createSnippet(formData: FormData) {
   // The Business Logic: Enforce Limits
   // If user is NOT pro AND has 5 or more snippets -> Block them
   if (!user.isPro && user.snippets.length >= 5) {
-    return { error: "Free plan limit reached. Please upgrade to Pro." };
+    redirect("/dashboard?error=limit-reached");
   }
 
   // Extract data from the HTML form
