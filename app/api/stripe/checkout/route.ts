@@ -10,7 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST() {
   const session = await auth();
-  if (!session?.user) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -31,9 +31,9 @@ export async function POST() {
       },
     ],
     mode: "payment", // "subscription" if you want recurring, "payment" for one-time
-    success_url: "http://localhost:3000/dashboard?success=true",
-    cancel_url: "http://localhost:3000/dashboard?canceled=true",
-    // CRITICAL: This lets us know WHO paid when Stripe tells us later
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard?success=true`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard?canceled=true`,
+    // This lets us know WHO paid when Stripe tells us later
     metadata: {
       userId: session.user.id,
     },
