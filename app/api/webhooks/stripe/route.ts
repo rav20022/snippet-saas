@@ -20,8 +20,9 @@ export async function POST(req: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (error: any) {
-    return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return new NextResponse(`Webhook Error: ${errorMessage}`, { status: 400 });
   }
 
   // Handle the specific event: "checkout.session.completed"
